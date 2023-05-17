@@ -1,2 +1,2 @@
-# godot_level_shot
-Utility to make images of an entire game level  for Godot
+# Godot Levelshot
+This addon allows you to take a screenshot of your entire 2d game level.

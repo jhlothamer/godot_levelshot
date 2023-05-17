@@ -1,0 +1,82 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+
+[sub_resource type="OpenSimplexNoise" id=1]
+
+[sub_resource type="NoiseTexture" id=2]
+seamless = true
+noise = SubResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.188235, 1, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.858824, 0, 1, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 0, 0, 1 )
+
+[node name="Testlevel" type="Node2D"]
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+margin_left = -1320.0
+margin_top = -2490.0
+margin_right = 4465.0
+margin_bottom = 1471.0
+border_width = 10.0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color( 0.2, 0.0352941, 0.466667, 1 )
+margin_left = -1320.0
+margin_top = -2490.0
+margin_right = 4465.0
+margin_bottom = 1471.0
+texture = SubResource( 2 )
+stretch_mode = 2
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.219608, 0.941176, 0.266667, 1 )
+polygon = PoolVector2Array( -1144, -1964, -1101, -869, 575, -1323, 484, -2012, -546, -1825, -194, -2290, 458, -2247, 826, -2167, 837, -1030, 543, -277, 799, 257, 1675, 193, 2449, -303, 1979, -1184, 1664, -1446, 1403, -2145, 778, -2359, -252, -2386, -701, -2199 )
+
+[node name="Polygon2D2" type="Polygon2D" parent="."]
+color = Color( 0.219608, 0.137255, 0.964706, 0.713726 )
+polygon = PoolVector2Array( 2544, -2161, 1996, -2214, 1611, -2161, 1133, -1417, -61, -413, -480, 387, 1190, 501, 1774, 901, 1977, 1117, 2650, 323, 3641, 209, 4028, -464, 3787, -1353, 4036, -1520, 4225, -1975, 4200, -2293, 3284, -2429, 2962, -2064 )
+
+[node name="Polygon2D3" type="Polygon2D" parent="."]
+color = Color( 0.894118, 0.0941176, 0.52549, 0.682353 )
+polygon = PoolVector2Array( -512, -579, -1026, 323, -1115, 1053, -690, 1339, 695, 1269, 1933, 1218, 2892, 1257, 3698, 1187, 4162, 1041, 4339, 241, 4219, -1264, 3882, -617, 3571, -1163, 3069, -928, 3429, -194, 3622, 469, 2434, 228, 1152, -420, 1025, 749, 277, 851, -467, 564, 142, -566 )
+
+[node name="Icon" type="Sprite" parent="."]
+position = Vector2( 1572, -510 )
+texture = ExtResource( 1 )
+
+[node name="Icon2" type="Sprite" parent="."]
+position = Vector2( 4872, -104 )
+texture = ExtResource( 1 )
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="Hud"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MarginContainer" type="MarginContainer" parent="Hud/Control"]
+margin_right = 512.0
+margin_bottom = 54.0
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+
+[node name="ProgressBar" type="ProgressBar" parent="Hud/Control/MarginContainer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 512.0
+margin_bottom = 54.0
+custom_styles/fg = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
+value = 50.0
+
+[node name="ExcludedPolygon2D" type="Polygon2D" parent="." groups=["levelshot_exclude"]]
+polygon = PoolVector2Array( -522, 287, 113, -2099, 278, -2089, 724, -330, 802, -295, 1277, -2153, 1528, -2126, 890, 240, 1237, 346, 1822, -2062, 3103, -2142, 2708, 415, 1376, 399, 1434, 115, 2457, 170, 2883, -1965, 1934, -1955, 1336, 405, 684, 351, 191, -1614, 108, -1613, -410, 325 )

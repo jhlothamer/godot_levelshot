@@ -1,0 +1,33 @@
+{
+	"save_folder": "levelshots",
+	"data_version": "1.0",
+	"levels": [
+		{
+			"level_scene_path": "res://tests/levels/lots_of_nodes_level.tscn",
+			"size_x": 1920,
+			"size_y": 1080,
+			"level_boundary_option": 0,
+			"excluded_node_groups": "levelshot_exclude",
+			"include_canvas_layers": false,
+			"disabled": false
+		},
+		{
+			"level_scene_path": "res://tests/levels/test_level.tscn",
+			"size_x": 1920,
+			"size_y": 1080,
+			"level_boundary_option": 0,
+			"excluded_node_groups": "levelshot_exclude",
+			"include_canvas_layers": true,
+			"disabled": false
+		},
+		{
+			"level_scene_path": "res://tests/levels/multi_mesh_instance_level.tscn",
+			"size_x": 1920,
+			"size_y": 1080,
+			"level_boundary_option": 0,
+			"excluded_node_groups": "levelshot_exclude",
+			"include_canvas_layers": false,
+			"disabled": false
+		}
+	]
+}

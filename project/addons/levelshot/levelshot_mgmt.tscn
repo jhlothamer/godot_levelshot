@@ -1,0 +1,165 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/levelshot/levelshot_mgmt.gd" type="Script" id=1]
+[ext_resource path="res://addons/levelshot/assets/icons/icon_add.svg" type="Texture" id=2]
+[ext_resource path="res://addons/levelshot/level_settings_control.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/levelshot/general_settings_control.tscn" type="PackedScene" id=4]
+
+[node name="LevelshotManager" type="PanelContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 593.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1000.0
+margin_bottom = 576.0
+
+[node name="LevelsVBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer"]
+margin_right = 300.0
+margin_bottom = 566.0
+rect_min_size = Vector2( 300, 0 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer"]
+margin_right = 300.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer/HBoxContainer"]
+margin_top = 8.0
+margin_right = 41.0
+margin_bottom = 22.0
+text = "Levels"
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer/HBoxContainer"]
+margin_left = 51.0
+margin_right = 75.0
+margin_bottom = 30.0
+
+[node name="AddLevelsBtn" type="TextureButton" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer/HBoxContainer/CenterContainer"]
+margin_top = 3.0
+margin_right = 24.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 24, 24 )
+hint_tooltip = "Add Level Scene"
+size_flags_vertical = 3
+texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[node name="levelsItemList" type="ItemList" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer"]
+margin_top = 34.0
+margin_right = 300.0
+margin_bottom = 566.0
+size_flags_vertical = 3
+items = [ "lots_of_nodes_level.tscn", null, false, "multi_mesh_instance_level.tscn", null, false, "test_level.tscn", null, false ]
+
+[node name="SettingsVBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer"]
+margin_left = 312.0
+margin_right = 990.0
+margin_bottom = 566.0
+custom_constants/separation = 30
+
+[node name="LevelSettings" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer" instance=ExtResource( 3 )]
+unique_name_in_owner = true
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 678.0
+margin_bottom = 390.0
+
+[node name="GeneralSettings" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 420.0
+margin_right = 678.0
+margin_bottom = 516.0
+
+[node name="CommandButtonHBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer"]
+margin_left = 381.0
+margin_top = 546.0
+margin_right = 678.0
+margin_bottom = 566.0
+size_flags_horizontal = 12
+custom_constants/separation = 20
+
+[node name="CaptureCurrentLevelBtn" type="Button" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
+unique_name_in_owner = true
+margin_right = 150.0
+margin_bottom = 20.0
+disabled = true
+text = "Capture Current Level"
+
+[node name="CaptureAllLevelsBtn" type="Button" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
+unique_name_in_owner = true
+margin_left = 170.0
+margin_right = 297.0
+margin_bottom = 20.0
+text = "Capture All Levels"
+
+[node name="LevelsFileDialog" type="FileDialog" parent="."]
+margin_left = 300.0
+margin_top = 200.0
+margin_right = 1100.0
+margin_bottom = 780.0
+rect_min_size = Vector2( 800, 580 )
+window_title = "Select Level Scenes"
+resizable = true
+mode_overrides_title = false
+mode = 1
+filters = PoolStringArray( "*.tscn", "*.scn" )
+
+[node name="RemoveLevelConfirmationDialog" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 407.0
+margin_bottom = 207.0
+rect_min_size = Vector2( 400, 200 )
+
+[node name="MarginContainer" type="MarginContainer" parent="RemoveLevelConfirmationDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+custom_constants/margin_bottom = 30
+
+[node name="CenterContainer" type="CenterContainer" parent="RemoveLevelConfirmationDialog/MarginContainer"]
+margin_right = 384.0
+margin_bottom = 126.0
+
+[node name="RemoveLevelConfirmationLabel" type="Label" parent="RemoveLevelConfirmationDialog/MarginContainer/CenterContainer"]
+unique_name_in_owner = true
+margin_left = 86.0
+margin_top = 39.0
+margin_right = 298.0
+margin_bottom = 87.0
+text = "Are you sure you want to remove
+<xyz>
+from Levelshot?"
+align = 1
+
+[connection signal="pressed" from="MarginContainer/HSplitContainer/LevelsVBoxContainer/HBoxContainer/CenterContainer/AddLevelsBtn" to="." method="_on_AddLevelsBtn_pressed"]
+[connection signal="item_selected" from="MarginContainer/HSplitContainer/LevelsVBoxContainer/levelsItemList" to="." method="_on_levelsItemList_item_selected"]
+[connection signal="level_disabled_toggled" from="MarginContainer/HSplitContainer/SettingsVBoxContainer/LevelSettings" to="." method="_on_LevelSettings_level_disabled_toggled"]
+[connection signal="remove_level_requested" from="MarginContainer/HSplitContainer/SettingsVBoxContainer/LevelSettings" to="." method="_on_LevelSettings_remove_level_requested"]
+[connection signal="pressed" from="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer/CaptureCurrentLevelBtn" to="." method="_on_CaptureCurrentLevelBtn_pressed"]
+[connection signal="pressed" from="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer/CaptureAllLevelsBtn" to="." method="_on_CaptureAllLevelsBtn_pressed"]
+[connection signal="files_selected" from="LevelsFileDialog" to="." method="_on_LevelsFileDialog_files_selected"]
+[connection signal="confirmed" from="RemoveLevelConfirmationDialog" to="." method="_on_RemoveLevelConfirmationDialog_confirmed"]
