@@ -24,7 +24,7 @@
 			"level_scene_path": "res://tests/levels/multi_mesh_instance_level.tscn",
 			"size_x": 1920,
 			"size_y": 1080,
-			"level_boundary_option": 0,
+			"level_boundary_option": 1,
 			"excluded_node_groups": "levelshot_exclude",
 			"include_canvas_layers": false,
 			"disabled": false

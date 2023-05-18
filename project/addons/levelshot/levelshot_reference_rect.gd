@@ -7,3 +7,4 @@ extends ReferenceRect
 #  1. If the boundary calculation takes too long
 #  2. The boundary calculation is incorrect
 #  3. You don't want everything in the level in the levelshot image
+#  4. You want more than one image from a single level (Yes - you can add > 1 LevelshotReferenceRect to a scene)

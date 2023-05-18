@@ -5,7 +5,6 @@ extends VBoxContainer
 onready var _save_folder: TextEdit = get_node("%SaveFolderTextEdit")
 
 
-
 var level_data: LevelshotData setget _set_level_data
 
 

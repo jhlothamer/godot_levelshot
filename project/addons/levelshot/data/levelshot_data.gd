@@ -34,7 +34,7 @@ func load() -> void:
 	_check_dup_filenames()
 
 
-func write() -> void:
+func save() -> void:
 	var data := {}
 	data["save_folder"] = save_folder
 	data["data_version"] = data_version

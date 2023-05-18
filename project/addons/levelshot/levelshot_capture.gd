@@ -48,44 +48,54 @@ func _process_level(level: LevelshotLevelData):
 	var loaded_level = level_scene.instance()
 	_level_parent.add_child(loaded_level)
 	
-	var level_extent: Rect2
+	var level_extents := []
+	
+	
+	#var level_extent: Rect2
 	if level.level_boundary_option == LevelshotLevelData.LevelBoundaryOptions.LEVELSHOTREFRECT:
-		level_extent = _get_level_extent_from_levelshot_ref_rect_rec(loaded_level)
+		#level_extent = _get_level_extent_from_levelshot_ref_rect_rec(loaded_level)
+		_get_level_extent_from_levelshot_ref_rects_rec(loaded_level, level_extents)
 	else:
 		#level_extent = _get_node_extent_rec(loaded_level)
 		var calculator := LevelshotLevelExtentCalculator.new()
-		level_extent = calculator.get_level_extent(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
-	
-	if Vector2.ZERO.is_equal_approx(level_extent.size):
-		printerr("LevelshotCapture: could not determine level boundary for level %s" % level.level_scene_path)
-		loaded_level.queue_free()
-		yield(get_tree(), "idle_frame")
-		return
+		var level_extent = calculator.get_level_extent(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
+		level_extents.append(level_extent)
 
-	yield(get_tree(), "idle_frame")
-	
 	var camera := Camera2D.new()
 	camera.current = true
 	_vp.add_child(camera)
 
-	# size viewport/viewportcontainer - make fit into max size but keep level rect aspect ratio
-	var v = level.size / level_extent.size
-	var f = min(v.x, v.y)
-	var viewport_size = level_extent.size * f
-	_vp.size = viewport_size
-	_vp_container.rect_size = viewport_size
+	var i := 0
+	for level_extent in level_extents:
+		i += 1
+		if Vector2.ZERO.is_equal_approx(level_extent.size):
+			printerr("LevelshotCapture: could not determine level boundary for level %s" % level.level_scene_path)
+			loaded_level.queue_free()
+			camera.queue_free()
+			yield(get_tree(), "idle_frame")
+			return
 
-	# center camera in level
-	camera.global_position = level_extent.position + level_extent.size / 2.0
-	
-	# zoom camera out so entire level in view
-	var zoom_xy = level_extent.size / _vp_container.rect_size
-	var zoom = max(zoom_xy.x, zoom_xy.y)
-	camera.zoom = Vector2(zoom, zoom)
+		yield(get_tree(), "idle_frame")
 
-	yield(get_tree(), "idle_frame")
-	
-	_save_level_image(level.level_scene_path)
+		# size viewport/viewportcontainer - make fit into max size but keep level rect aspect ratio
+		var v = level.size / level_extent.size
+		var f = min(v.x, v.y)
+		var viewport_size = level_extent.size * f
+		_vp.size = viewport_size
+		_vp_container.rect_size = viewport_size
+
+		# center camera in level
+		camera.global_position = level_extent.position + level_extent.size / 2.0
+		
+		# zoom camera out so entire level in view
+		var zoom_xy = level_extent.size / _vp_container.rect_size
+		var zoom = max(zoom_xy.x, zoom_xy.y)
+		camera.zoom = Vector2(zoom, zoom)
+		
+		yield(get_tree(), "idle_frame")
+		
+		var suffix = "" if level_extents.size() == 1 else "_%d" % i
+		_save_level_image(level.level_scene_path, suffix)
 	
 	# clean up
 	camera.queue_free()
@@ -94,29 +104,24 @@ func _process_level(level: LevelshotLevelData):
 	print("LevelshotCapture: capture complete for level %s" % level.level_scene_path)
 
 
-func _save_level_image(level_scene_path: String) -> void:
+func _save_level_image(level_scene_path: String, suffix: String) -> void:
 	var image: Image = _vp.get_texture().get_data()
 	image.flip_y()
 	#_levelshot_data.save_folder
 	var s:= ""
 	level_scene_path.get_file()
 	var base_file_name = level_scene_path.get_file().replace(".tscn", "").replace(".scn", "")
-	var image_file_path = "user://%s/%s.png" % [_levelshot_data.save_folder, base_file_name]
+	var image_file_path = "user://%s/%s%s.png" % [_levelshot_data.save_folder, base_file_name, suffix]
 	var result = image.save_png(image_file_path)
 	if result != OK:
 		printerr("Unable to save level image to %s (error code %d)" % [image_file_path, result])
 
 
-func _get_level_extent_from_levelshot_ref_rect_rec(n: Node) -> Rect2:
+func _get_level_extent_from_levelshot_ref_rects_rec(n: Node, ref_rects: Array) -> void:
 	if n is LevelshotReferenceRect:
 		var rr: LevelshotReferenceRect = n
-		return rr.get_global_rect()
+		ref_rects.append(rr.get_global_rect())
 	
-	for c in get_children():
-		var result := _get_level_extent_from_levelshot_ref_rect_rec(c)
-		if result.size != Vector2.ZERO:
-			return result
-	
-	return ZERO_RECT
-
+	for c in n.get_children():
+		_get_level_extent_from_levelshot_ref_rects_rec(c, ref_rects)
 
