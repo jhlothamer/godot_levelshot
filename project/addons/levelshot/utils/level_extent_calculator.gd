@@ -1,42 +1,15 @@
 class_name LevelshotLevelExtentCalculator
-extends Reference
+extends LevelshotLevelExtentBase
 
 const ZERO_RECT = Rect2(Vector2.ZERO, Vector2.ZERO)
 
-var _include_canvas_layer: bool
-var _exclude_node_groups := []
 
-func get_level_extent(level_node: Node, include_canvas_layer: bool, exclude_node_groups: Array) -> Rect2:
-	
-	_include_canvas_layer = include_canvas_layer
-	_exclude_node_groups = exclude_node_groups
-	
-	return _get_node_extent_rec(level_node)
-
-
-func _is_node_excluded_on_group(n: Node) -> bool:
-	for node_group in _exclude_node_groups:
-		if n.is_in_group(node_group):
-			return true
-	
-	return false
+func _get_level_extents(level_node: Node) -> Array:
+	return [_get_node_extent_rec(level_node)]
 
 
 func _get_node_extent_rec(n: Node) -> Rect2:
-
-	if _is_node_excluded_on_group(n):
-		n.visible = false
-		return ZERO_RECT
-	
-	if n is CanvasLayer and !_include_canvas_layer:
-		n.visible = false
-		return ZERO_RECT
-	if n is CanvasItem and !n.visible:
-		return ZERO_RECT
-	
-	if n is Camera2D:
-		#n.current = false
-		n.queue_free()
+	if _is_node_skipped(n):
 		return ZERO_RECT
 	
 	var extent := _get_node_extent(n)
@@ -109,7 +82,6 @@ func _get_node_extent_tilemap(t: TileMap) -> Rect2:
 	return Rect2(t.to_global(r.position), r.size)
 
 
-
 func _get_node_extent_multimeshinstance2d(m: MultiMeshInstance2D) -> Rect2:
 		var mm := m.multimesh
 		var aabb := mm.get_aabb()
@@ -119,6 +91,3 @@ func _get_node_extent_multimeshinstance2d(m: MultiMeshInstance2D) -> Rect2:
 		var size = Vector2(aabb.size.x, aabb.size.y)
 	
 		return Rect2(pos, size)
-
-
-

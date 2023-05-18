@@ -33,7 +33,6 @@ func _ensure_save_folder_exists() -> void:
 
 func _process_levels():
 	print("LevelshotCapture: beginning levelshot captures")
-	get_tree().paused = true
 	for level_scene_path in _capture_data.level_scene_paths:
 		var level = _levelshot_data.get_level(level_scene_path)
 		yield(_process_level(level), "completed")
@@ -53,13 +52,18 @@ func _process_level(level: LevelshotLevelData):
 	
 	#var level_extent: Rect2
 	if level.level_boundary_option == LevelshotLevelData.LevelBoundaryOptions.LEVELSHOTREFRECT:
-		#level_extent = _get_level_extent_from_levelshot_ref_rect_rec(loaded_level)
-		_get_level_extent_from_levelshot_ref_rects_rec(loaded_level, level_extents)
+		var calculator := LevelshotLevelExtentFromRefRect.new()
+		level_extents = calculator.get_level_extents(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
 	else:
 		#level_extent = _get_node_extent_rec(loaded_level)
 		var calculator := LevelshotLevelExtentCalculator.new()
-		var level_extent = calculator.get_level_extent(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
-		level_extents.append(level_extent)
+		level_extents = calculator.get_level_extents(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
+
+
+
+	yield(get_tree(), "idle_frame")
+
+	get_tree().paused = true
 
 	var camera := Camera2D.new()
 	camera.current = true
@@ -75,15 +79,13 @@ func _process_level(level: LevelshotLevelData):
 			yield(get_tree(), "idle_frame")
 			return
 
-		yield(get_tree(), "idle_frame")
-
 		# size viewport/viewportcontainer - make fit into max size but keep level rect aspect ratio
 		var v = level.size / level_extent.size
 		var f = min(v.x, v.y)
 		var viewport_size = level_extent.size * f
 		_vp.size = viewport_size
 		_vp_container.rect_size = viewport_size
-
+		
 		# center camera in level
 		camera.global_position = level_extent.position + level_extent.size / 2.0
 		
@@ -102,6 +104,7 @@ func _process_level(level: LevelshotLevelData):
 	loaded_level.queue_free()
 	yield(get_tree(), "idle_frame")
 	print("LevelshotCapture: capture complete for level %s" % level.level_scene_path)
+	get_tree().paused = false
 
 
 func _save_level_image(level_scene_path: String, suffix: String) -> void:
@@ -115,13 +118,4 @@ func _save_level_image(level_scene_path: String, suffix: String) -> void:
 	var result = image.save_png(image_file_path)
 	if result != OK:
 		printerr("Unable to save level image to %s (error code %d)" % [image_file_path, result])
-
-
-func _get_level_extent_from_levelshot_ref_rects_rec(n: Node, ref_rects: Array) -> void:
-	if n is LevelshotReferenceRect:
-		var rr: LevelshotReferenceRect = n
-		ref_rects.append(rr.get_global_rect())
-	
-	for c in n.get_children():
-		_get_level_extent_from_levelshot_ref_rects_rec(c, ref_rects)
 
