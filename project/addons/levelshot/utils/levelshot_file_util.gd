@@ -14,15 +14,15 @@ static func load_text(file_path: String, default_value: String = "") -> String:
 	return contents
 
 
-static func save_text(file_path: String, contents: String, create_file: bool = true) -> int:
+static func save_text(file_path: String, contents: String) -> void:
 	var data_file: File = File.new()
 	var error = data_file.open(file_path, File.WRITE)
 	if error != OK:
 		data_file.close()
-		return error
+		return
 	data_file.store_string(contents)
 	data_file.close()
-	return OK
+	return
 
 
 static func load_json_data(file_path: String, default_value = {}) -> Dictionary:

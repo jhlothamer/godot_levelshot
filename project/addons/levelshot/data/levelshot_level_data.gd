@@ -19,7 +19,7 @@ var include_canvas_layers := false
 var disabled := false
 
 
-var display_name :String setget _set_display_name, _get_display_name
+var display_name :String setget ,_get_display_name
 
 var _options:LevelshotLevelDataOptions
 
@@ -60,10 +60,6 @@ func get_excluded_node_groups_array() -> Array:
 	
 	return a
 
-
-
-func _set_display_name(value):
-	pass
 
 func _get_display_name():
 	if _options.use_filename_for_display:

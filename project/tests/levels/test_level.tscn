@@ -80,3 +80,12 @@ value = 50.0
 
 [node name="ExcludedPolygon2D" type="Polygon2D" parent="." groups=["levelshot_exclude"]]
 polygon = PoolVector2Array( -522, 287, 113, -2099, 278, -2089, 724, -330, 802, -295, 1277, -2153, 1528, -2126, 890, 240, 1237, 346, 1822, -2062, 3103, -2142, 2708, 415, 1376, 399, 1434, 115, 2457, 170, 2883, -1965, 1934, -1955, 1336, 405, 684, 351, 191, -1614, 108, -1613, -410, 325 )
+
+[node name="ReferenceRect2" type="ReferenceRect" parent="."]
+margin_left = 1053.0
+margin_top = -800.0
+margin_right = 2077.0
+margin_bottom = -200.0
+border_color = Color( 0.196078, 1, 0, 1 )
+border_width = 10.0
+editor_only = false

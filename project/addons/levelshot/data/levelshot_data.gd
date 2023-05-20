@@ -12,9 +12,9 @@ const DEFAULT_DATA = {
 	}
 
 
+var data_version := "1.0"
 var levels = {}
 var save_folder := "levelshots"
-var data_version := "1.0"
 
 
 var _options := LevelshotLevelData.LevelshotLevelDataOptions.new()

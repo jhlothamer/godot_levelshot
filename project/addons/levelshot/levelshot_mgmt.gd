@@ -32,8 +32,18 @@ func _ready():
 	_capture_all_lvl_btn.disabled = _level_data.levels.size() == 0
 
 
+func _get_selected_level() -> LevelshotLevelData:
+	var selected_items := _level_list.get_selected_items()
+	if selected_items.empty():
+		return null
+	
+	var selected_index = selected_items[0]
+	
+	return _level_list.get_item_metadata(selected_index)
+
 
 func _refresh_level_list() -> void:
+	var selected_level := _get_selected_level()
 	_level_list.clear()
 	_level_settings.clear()
 	for i in _level_data.get_levels():
@@ -47,8 +57,20 @@ func _refresh_level_list() -> void:
 			_level_list.set_item_custom_fg_color(index, ENABLED_LEVEL_LIST_ITEM_COLOR)
 		
 	_level_list.sort_items_by_text()
-	_capture_current_lvl_btn.disabled = true
+	if selected_level == null:
+		if _level_list.get_item_count() == 0:
+			_capture_current_lvl_btn.disabled = true
+		else:
+			_capture_current_lvl_btn.disabled = false
+			_level_list.select(0)
+			_on_levelsItemList_item_selected(0)
+		return
 
+	_capture_current_lvl_btn.disabled = false
+	for index in _level_list.get_item_count():
+		if selected_level == _level_list.get_item_metadata(index):
+			_level_list.select(index)
+			_on_levelsItemList_item_selected(index)
 
 func _update_data() -> void:
 	_level_settings.update_data()

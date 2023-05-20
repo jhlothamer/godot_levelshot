@@ -101,7 +101,7 @@ custom_constants/separation = 20
 unique_name_in_owner = true
 margin_right = 150.0
 margin_bottom = 20.0
-disabled = true
+hint_tooltip = "Captures levelshot of currently selected level in Levels list box."
 text = "Capture Current Level"
 
 [node name="CaptureAllLevelsBtn" type="Button" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
@@ -109,6 +109,7 @@ unique_name_in_owner = true
 margin_left = 170.0
 margin_right = 297.0
 margin_bottom = 20.0
+hint_tooltip = "Captures levelshots of all currently enabled levels."
 text = "Capture All Levels"
 
 [node name="LevelsFileDialog" type="FileDialog" parent="."]

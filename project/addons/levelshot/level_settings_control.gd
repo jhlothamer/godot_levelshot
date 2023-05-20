@@ -1,12 +1,15 @@
 tool
 extends VBoxContainer
 
+const HEADER_LABEL_STRING_FORMAT = "Level Settings (%s)"
+
 signal remove_level_requested()
 signal level_disabled_toggled(disabled)
 
 onready var _level_setings:VBoxContainer = $LevelSettingsVBoxContainer
 onready var _none_selected: Control = $NoLevelSelectedCenterContainer
 
+onready var _header_lbl: Label = get_node("%LevelSettingsHeaderLabel")
 onready var _size_x:SpinBox = get_node("%SizeXSpinBox")
 onready var _size_y:SpinBox = get_node("%SizeYSpinBox")
 onready var _level_extent_calc_cb:CheckBox = get_node("%LevelExtentsCalculateCheckBox")
@@ -35,6 +38,7 @@ func display(level_data: LevelshotLevelData) -> void:
 	
 	current_level_data = level_data
 	
+	_header_lbl.text = HEADER_LABEL_STRING_FORMAT % level_data.display_name
 	_size_x.value = level_data.size.x
 	_size_y.value = level_data.size.y
 	_level_extent_calc_cb.pressed = level_data.level_boundary_option == LevelshotLevelData.LevelBoundaryOptions.CALCULATE

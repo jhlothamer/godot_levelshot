@@ -16,7 +16,6 @@ size_flags_vertical = 3
 script = ExtResource( 1 )
 
 [node name="LevelSettingsVBoxContainer" type="VBoxContainer" parent="."]
-visible = false
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
@@ -24,6 +23,7 @@ size_flags_vertical = 3
 custom_constants/separation = 20
 
 [node name="LevelSettingsHeaderLabel" type="Label" parent="LevelSettingsVBoxContainer"]
+unique_name_in_owner = true
 margin_right = 1024.0
 margin_bottom = 16.0
 custom_styles/normal = SubResource( 1 )
@@ -36,49 +36,43 @@ margin_bottom = 60.0
 
 [node name="SizeLabel" type="Label" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
 margin_top = 5.0
-margin_right = 100.0
+margin_right = 120.0
 margin_bottom = 19.0
-rect_min_size = Vector2( 100, 0 )
-text = "Size"
+rect_min_size = Vector2( 120, 0 )
+hint_tooltip = "Max size of captured image"
+mouse_filter = 1
+text = "Max Image Size"
 
 [node name="SizeXSpinBox" type="SpinBox" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
 unique_name_in_owner = true
-margin_left = 104.0
-margin_right = 178.0
+margin_left = 124.0
+margin_right = 198.0
 margin_bottom = 24.0
+hint_tooltip = "this is a tooltip"
 max_value = 5000.0
 value = 1920.0
 
 [node name="ByLabel" type="Label" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
-margin_left = 182.0
+margin_left = 202.0
 margin_top = 5.0
-margin_right = 220.0
+margin_right = 240.0
 margin_bottom = 19.0
 text = "px by "
 
 [node name="SizeYSpinBox" type="SpinBox" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
 unique_name_in_owner = true
-margin_left = 224.0
-margin_right = 298.0
+margin_left = 244.0
+margin_right = 318.0
 margin_bottom = 24.0
 max_value = 5000.0
 value = 1080.0
 
 [node name="SizeYPxLabel" type="Label" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
-margin_left = 302.0
+margin_left = 322.0
 margin_top = 5.0
-margin_right = 317.0
+margin_right = 337.0
 margin_bottom = 19.0
 text = "px"
-
-[node name="Label" type="Label" parent="LevelSettingsVBoxContainer/SizeHBoxContainer"]
-margin_left = 321.0
-margin_top = 5.0
-margin_right = 1024.0
-margin_bottom = 19.0
-size_flags_horizontal = 3
-text = "(max size of captured image)"
-align = 2
 
 [node name="LevelExtentsHBoxContainer" type="HBoxContainer" parent="LevelSettingsVBoxContainer"]
 margin_top = 80.0
@@ -90,18 +84,24 @@ custom_constants/separation = 10
 margin_right = 100.0
 margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
+hint_tooltip = "How the level boundary is determined"
+mouse_filter = 1
 size_flags_vertical = 1
 text = "Level Boundary"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LevelSettingsVBoxContainer/LevelExtentsHBoxContainer"]
 margin_left = 110.0
-margin_right = 277.0
+margin_right = 321.0
 margin_bottom = 52.0
 
 [node name="LevelExtentsCalculateCheckBox" type="CheckBox" parent="LevelSettingsVBoxContainer/LevelExtentsHBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_right = 167.0
+margin_right = 211.0
 margin_bottom = 24.0
+hint_tooltip = "Traverse level scene and determine the global bounding box for all visible (and non-excluded) nodes.  
+These bounding boxes are merged into one bounding box for the entire level.  
+This calculation may be wrong or include things you don't want.  
+Use an excluded node group or LevelshotReferenceRect if this happens."
 pressed = true
 group = SubResource( 2 )
 text = "Calculate"
@@ -109,28 +109,26 @@ text = "Calculate"
 [node name="LevelExtentsLevelshotRefRectCheckBox" type="CheckBox" parent="LevelSettingsVBoxContainer/LevelExtentsHBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 28.0
-margin_right = 167.0
+margin_right = 211.0
 margin_bottom = 52.0
+hint_tooltip = "The bounding box for the level is set with a LevelshotReferenceRect node.
+This option allows full control and can be faster.
+You can included multiple LevelshotReferenceRect nodes in a game level scene.
+A separate levelshot will be created for each LevelshotReferenceRect node."
 group = SubResource( 2 )
-text = "Use LevelshotRefRect"
-
-[node name="LevelExtentDescriptionLabel" type="Label" parent="LevelSettingsVBoxContainer/LevelExtentsHBoxContainer"]
-margin_left = 287.0
-margin_top = 10.0
-margin_right = 1024.0
-margin_bottom = 41.0
-size_flags_horizontal = 3
-text = "(If calculated level boundary is wrong or takes too long, use the LevelshotReferenceRect control in the level and check Use LevelshotRefRect)"
-autowrap = true
+text = "Use LevelshotReferenceRect"
 
 [node name="ExcludedNodeGroupsVBoxContainer" type="VBoxContainer" parent="LevelSettingsVBoxContainer"]
 margin_top = 152.0
 margin_right = 1024.0
-margin_bottom = 228.0
+margin_bottom = 210.0
 
 [node name="ExcludedNodeGroupsLabel" type="Label" parent="LevelSettingsVBoxContainer/ExcludedNodeGroupsVBoxContainer"]
 margin_right = 1024.0
 margin_bottom = 14.0
+hint_tooltip = "Nodes with one of these node groups will be excluded from the levelshot.
+(They will be set is invisible.)"
+mouse_filter = 1
 text = "Excluded Node Groups (comma separated)"
 
 [node name="ExcludedNodeGroupsTextEdit" type="TextEdit" parent="LevelSettingsVBoxContainer/ExcludedNodeGroupsVBoxContainer"]
@@ -142,39 +140,40 @@ rect_min_size = Vector2( 0, 40 )
 text = "levelshot_exclude
 "
 
-[node name="Label" type="Label" parent="LevelSettingsVBoxContainer/ExcludedNodeGroupsVBoxContainer"]
-margin_top = 62.0
-margin_right = 1024.0
-margin_bottom = 76.0
-text = "(Nodes with one of these node groups won't be included in the image)"
-
 [node name="IncludeCanvasLayersCheckBox" type="CheckBox" parent="LevelSettingsVBoxContainer"]
 unique_name_in_owner = true
-margin_top = 248.0
+margin_top = 230.0
 margin_right = 1024.0
-margin_bottom = 272.0
-text = "Include Canvas Layers  (HUDs and other overlays are usually not wanted)"
+margin_bottom = 254.0
+hint_tooltip = "HUDs and other overlays are usually not wanted.
+If this is untrue for the level, check this box."
+text = "Include Canvas Layers"
 
 [node name="DisableLevelshotCheckBox" type="CheckBox" parent="LevelSettingsVBoxContainer"]
 unique_name_in_owner = true
-margin_top = 292.0
+margin_top = 274.0
 margin_right = 1024.0
-margin_bottom = 316.0
-text = "Disable Levelshot for this level  (Level image won't be created, but keep the data)"
+margin_bottom = 298.0
+hint_tooltip = "Level image won't be created, but keep the Levelshot settings for it just in case.
+(You can also remove the level from Levelshot.)"
+text = "Disable Levelshot for this level"
 
 [node name="CommandsHBoxContainer" type="HBoxContainer" parent="LevelSettingsVBoxContainer"]
-margin_top = 336.0
+margin_top = 318.0
 margin_right = 1024.0
-margin_bottom = 356.0
+margin_bottom = 338.0
 alignment = 2
 
 [node name="RemoveLevelBtn" type="Button" parent="LevelSettingsVBoxContainer/CommandsHBoxContainer"]
 margin_left = 922.0
 margin_right = 1024.0
 margin_bottom = 20.0
+hint_tooltip = "Removes the level from Levelshot.
+Does NOT delete the scene."
 text = "Remove Level"
 
 [node name="NoLevelSelectedCenterContainer" type="CenterContainer" parent="."]
+visible = false
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3

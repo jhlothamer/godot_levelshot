@@ -9,12 +9,15 @@ func get_level_extents(level_node: Node, include_canvas_layer: bool, exclude_nod
 	_exclude_node_groups = exclude_node_groups
 	return _get_level_extents(level_node)
 
-func _get_level_extents(level_node: Node) -> Array:
+func _get_level_extents(_level_node: Node) -> Array:
 	return []
 
 
 func _is_node_skipped(n: Node) -> bool:
-	if LevelshotNodeUtil.is_node_in_group(n, _exclude_node_groups):
+	
+	n.pause_mode = Node.PAUSE_MODE_STOP
+	
+	if LevelshotNodeUtil.is_node_in_group(n, _exclude_node_groups) and (n is CanvasItem or n is Control):
 		n.visible = false
 		return true
 	

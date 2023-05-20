@@ -25,6 +25,11 @@ margin_bottom = 96.0
 [node name="SaveFolderLabel" type="Label" parent="SaveFolderVBoxContainer"]
 margin_right = 1024.0
 margin_bottom = 14.0
+hint_tooltip = "Save folder for levelshot images.  Will be created in user://.
+Image file names will be of form <scene_file_name>.png.
+If multiple levelshots are created for a scene (see Use LevelshotReferenceRect),
+image file names will be of the form <scene_file_name>_#.png."
+mouse_filter = 1
 text = "Save Folder"
 
 [node name="SaveFolderTextEdit" type="TextEdit" parent="SaveFolderVBoxContainer"]

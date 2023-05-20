@@ -23,12 +23,13 @@ func _ready():
 
 
 func _ensure_save_folder_exists() -> void:
-	pass
 	var full_save_folder = "user://%s" % _levelshot_data.save_folder
 	var d := Directory.new()
 	if d.dir_exists(full_save_folder):
 		return
-	d.make_dir_recursive(full_save_folder)
+	if OK != d.make_dir_recursive(full_save_folder):
+		printerr("LevelshotCapture: could not create save folder %s" % full_save_folder)
+		assert(false)
 
 
 func _process_levels():
@@ -42,36 +43,52 @@ func _process_levels():
 
 func _process_level(level: LevelshotLevelData):
 	print("LevelshotCapture: processing level %s" % level.level_scene_path)
+	
 	var level_scene = load(level.level_scene_path)
 	
 	var loaded_level = level_scene.instance()
-	_level_parent.add_child(loaded_level)
+
+	yield(get_tree(), "idle_frame")
 	
+	# add level to root and set it as current scene
+	#  some games rely on the level scene being on the root and being the current scene
+	get_tree().root.add_child(loaded_level)
+	get_tree().current_scene = loaded_level
+	
+	# plug-in here??
+
+	yield(get_tree(), "idle_frame")
+
+	#  gather level extents (boundaries)
+	#  a game level can have multiple LevelshotReferenceRect nodes which results in multiple images
+	#  Note: this process also hides/disables/frees certain node types
 	var level_extents := []
 	
-	
-	#var level_extent: Rect2
 	if level.level_boundary_option == LevelshotLevelData.LevelBoundaryOptions.LEVELSHOTREFRECT:
 		var calculator := LevelshotLevelExtentFromRefRect.new()
 		level_extents = calculator.get_level_extents(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
 	else:
-		#level_extent = _get_node_extent_rec(loaded_level)
 		var calculator := LevelshotLevelExtentCalculator.new()
 		level_extents = calculator.get_level_extents(loaded_level, level.include_canvas_layers, level.get_excluded_node_groups_array())
 
+	yield(get_tree(), "idle_frame")
 
+	# now pause to stop game level code from running
+	get_tree().paused = true
+
+	# and now that code is paused move level node to be under the capture viewport
+	get_tree().root.call_deferred("remove_child", loaded_level)
+	_level_parent.call_deferred("add_child", loaded_level)
 
 	yield(get_tree(), "idle_frame")
 
-	get_tree().paused = true
-
+	# any camera in the level was freed during extent calculations - so we can control the camera
 	var camera := Camera2D.new()
 	camera.current = true
 	_vp.add_child(camera)
 
-	var i := 0
-	for level_extent in level_extents:
-		i += 1
+	for i in level_extents.size():
+		var level_extent: Rect2 = level_extents[i]
 		if Vector2.ZERO.is_equal_approx(level_extent.size):
 			printerr("LevelshotCapture: could not determine level boundary for level %s" % level.level_scene_path)
 			loaded_level.queue_free()
@@ -96,7 +113,7 @@ func _process_level(level: LevelshotLevelData):
 		
 		yield(get_tree(), "idle_frame")
 		
-		var suffix = "" if level_extents.size() == 1 else "_%d" % i
+		var suffix = "" if level_extents.size() == 1 else "_%d" % (i+1)
 		_save_level_image(level.level_scene_path, suffix)
 	
 	# clean up
@@ -110,9 +127,6 @@ func _process_level(level: LevelshotLevelData):
 func _save_level_image(level_scene_path: String, suffix: String) -> void:
 	var image: Image = _vp.get_texture().get_data()
 	image.flip_y()
-	#_levelshot_data.save_folder
-	var s:= ""
-	level_scene_path.get_file()
 	var base_file_name = level_scene_path.get_file().replace(".tscn", "").replace(".scn", "")
 	var image_file_path = "user://%s/%s%s.png" % [_levelshot_data.save_folder, base_file_name, suffix]
 	var result = image.save_png(image_file_path)
