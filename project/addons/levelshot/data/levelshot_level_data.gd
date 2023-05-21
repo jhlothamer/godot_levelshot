@@ -1,8 +1,17 @@
 class_name LevelshotLevelData
 extends Reference
 
+
 class LevelshotLevelDataOptions:
 	var use_filename_for_display := true
+
+
+enum ImageSizeOptions {
+	SCALE,
+	MAXSIZE,
+	SCALEWITHMAXSIZE,
+}
+
 
 enum LevelBoundaryOptions {
 	CALCULATE,
@@ -12,6 +21,8 @@ enum LevelBoundaryOptions {
 
 var level_scene_path := ""
 var filename := ""
+var image_size_option:int = ImageSizeOptions.SCALE
+var scale := 10
 var size := Vector2(1920, 1080)
 var level_boundary_option:int = LevelBoundaryOptions.CALCULATE
 var excluded_node_groups := "levelshot_exclude"
@@ -34,6 +45,8 @@ func _init(options: LevelshotLevelDataOptions, scene_path: String = ""):
 func read(data: Dictionary) -> void:
 	level_scene_path = data["level_scene_path"]
 	filename = level_scene_path.get_file()
+	image_size_option = data["image_size_option"]
+	scale = data["scale"]
 	size.x = data["size_x"]
 	size.y = data["size_y"]
 	level_boundary_option = data["level_boundary_option"]
@@ -44,6 +57,8 @@ func read(data: Dictionary) -> void:
 
 func write(data: Dictionary) -> void:
 	data["level_scene_path"] = level_scene_path
+	data["image_size_option"] = image_size_option
+	data["scale"] = scale
 	data["size_x"] = size.x
 	data["size_y"] = size.y
 	data["level_boundary_option"] = level_boundary_option

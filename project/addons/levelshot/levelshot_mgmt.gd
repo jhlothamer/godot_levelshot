@@ -19,7 +19,7 @@ onready var _capture_current_lvl_btn: Button = get_node("%CaptureCurrentLevelBtn
 onready var _capture_all_lvl_btn: Button = get_node("%CaptureAllLevelsBtn")
 onready var _remove_lvl_conf_dlg: ConfirmationDialog = get_node("%RemoveLevelConfirmationDialog")
 onready var _remove_lvl_conf_lbl: Label = get_node("%RemoveLevelConfirmationLabel")
-
+onready var _version_lbl: Label = get_node("%VersionLabel")
 
 var _level_data: LevelshotData
 
@@ -30,7 +30,19 @@ func _ready():
 	_refresh_level_list()
 	_general_settings.level_data = _level_data
 	_capture_all_lvl_btn.disabled = _level_data.levels.size() == 0
+	_update_version_label()
 
+
+func _update_version_label() -> void:
+	var config = ConfigFile.new()
+	if OK != config.load("res://addons/levelshot/plugin.cfg"):
+		printerr("LevelshotMgmt: could not open plugin file to get version")
+		return
+	var version = config.get_value("plugin", "version", "")
+	if version == "":
+		printerr("LevelshotMgmt: could not get version from config file")
+		return
+	_version_lbl.text = "v%s" % version
 
 func _get_selected_level() -> LevelshotLevelData:
 	var selected_items := _level_list.get_selected_items()
@@ -93,6 +105,10 @@ func _on_LevelsFileDialog_files_selected(paths):
 
 
 func _on_levelsItemList_item_selected(index):
+	call_deferred("_display_level", index)
+
+
+func _display_level(index):
 	var level = _level_list.get_item_metadata(index)
 	_level_settings.display(level)
 	_capture_current_lvl_btn.disabled = level.disabled
@@ -115,6 +131,10 @@ func _get_all_level_scene_paths() -> Array:
 
 
 func _on_CaptureCurrentLevelBtn_pressed():
+	call_deferred("_capture_current_level")
+
+
+func _capture_current_level():
 	_update_data()
 	_save_capture_data([_level_settings.current_level_data.level_scene_path])
 	if editor_interface != null:
@@ -122,6 +142,9 @@ func _on_CaptureCurrentLevelBtn_pressed():
 
 
 func _on_CaptureAllLevelsBtn_pressed():
+	call_deferred("_capture_all")
+
+func _capture_all():
 	_update_data()
 	var level_scene_paths = _get_all_level_scene_paths()
 	if level_scene_paths.empty():

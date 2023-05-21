@@ -4,6 +4,8 @@
 	"levels": [
 		{
 			"level_scene_path": "res://tests/levels/lots_of_nodes_level.tscn",
+			"image_size_option": 0,
+			"scale": 1,
 			"size_x": 1920,
 			"size_y": 1080,
 			"level_boundary_option": 0,
@@ -13,6 +15,8 @@
 		},
 		{
 			"level_scene_path": "res://tests/levels/multi_mesh_instance_level.tscn",
+			"image_size_option": 0,
+			"scale": 1,
 			"size_x": 1920,
 			"size_y": 1080,
 			"level_boundary_option": 1,
@@ -22,6 +26,8 @@
 		},
 		{
 			"level_scene_path": "res://tests/levels/test_level.tscn",
+			"image_size_option": 0,
+			"scale": 1,
 			"size_x": 1920,
 			"size_y": 1080,
 			"level_boundary_option": 0,

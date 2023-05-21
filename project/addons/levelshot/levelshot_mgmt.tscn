@@ -16,7 +16,7 @@ script = ExtResource( 1 )
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 1017.0
-margin_bottom = 593.0
+margin_bottom = 597.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -26,11 +26,11 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1000.0
-margin_bottom = 576.0
+margin_bottom = 580.0
 
 [node name="LevelsVBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer"]
 margin_right = 300.0
-margin_bottom = 566.0
+margin_bottom = 570.0
 rect_min_size = Vector2( 300, 0 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer"]
@@ -64,14 +64,14 @@ stretch_mode = 3
 [node name="levelsItemList" type="ItemList" parent="MarginContainer/HSplitContainer/LevelsVBoxContainer"]
 margin_top = 34.0
 margin_right = 300.0
-margin_bottom = 566.0
+margin_bottom = 570.0
 size_flags_vertical = 3
 items = [ "lots_of_nodes_level.tscn", null, false, "multi_mesh_instance_level.tscn", null, false, "test_level.tscn", null, false ]
 
 [node name="SettingsVBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer"]
 margin_left = 312.0
 margin_right = 990.0
-margin_bottom = 566.0
+margin_bottom = 570.0
 custom_constants/separation = 30
 
 [node name="LevelSettings" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer" instance=ExtResource( 3 )]
@@ -79,35 +79,45 @@ unique_name_in_owner = true
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 678.0
-margin_bottom = 390.0
+margin_bottom = 394.0
 
 [node name="GeneralSettings" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer" instance=ExtResource( 4 )]
 unique_name_in_owner = true
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 420.0
+margin_top = 424.0
 margin_right = 678.0
-margin_bottom = 516.0
+margin_bottom = 520.0
 
 [node name="CommandButtonHBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer"]
-margin_left = 381.0
-margin_top = 546.0
+margin_top = 550.0
 margin_right = 678.0
-margin_bottom = 566.0
-size_flags_horizontal = 12
+margin_bottom = 570.0
+size_flags_horizontal = 13
 custom_constants/separation = 20
+alignment = 2
+
+[node name="VersionLabel" type="Label" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
+unique_name_in_owner = true
+margin_top = 3.0
+margin_right = 361.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "v??"
 
 [node name="CaptureCurrentLevelBtn" type="Button" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
 unique_name_in_owner = true
-margin_right = 150.0
+margin_left = 381.0
+margin_right = 531.0
 margin_bottom = 20.0
 hint_tooltip = "Captures levelshot of currently selected level in Levels list box."
 text = "Capture Current Level"
 
 [node name="CaptureAllLevelsBtn" type="Button" parent="MarginContainer/HSplitContainer/SettingsVBoxContainer/CommandButtonHBoxContainer"]
 unique_name_in_owner = true
-margin_left = 170.0
-margin_right = 297.0
+margin_left = 551.0
+margin_right = 678.0
 margin_bottom = 20.0
 hint_tooltip = "Captures levelshots of all currently enabled levels."
 text = "Capture All Levels"

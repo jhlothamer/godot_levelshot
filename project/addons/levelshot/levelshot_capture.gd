@@ -41,6 +41,10 @@ func _process_levels():
 	get_tree().quit()
 
 
+func _is_size_greater(a: Vector2, b: Vector2) -> bool:
+	return a.x > b.x or a.y > b.y
+
+
 func _process_level(level: LevelshotLevelData):
 	print("LevelshotCapture: processing level %s" % level.level_scene_path)
 	
@@ -97,11 +101,27 @@ func _process_level(level: LevelshotLevelData):
 			return
 
 		# size viewport/viewportcontainer - make fit into max size but keep level rect aspect ratio
-		var v = level.size / level_extent.size
-		var f = min(v.x, v.y)
-		var viewport_size = level_extent.size * f
-		_vp.size = viewport_size
+		
+		var viewport_size := Vector2.ZERO
+		
+		if level.image_size_option == LevelshotLevelData.ImageSizeOptions.SCALE or level.image_size_option == LevelshotLevelData.ImageSizeOptions.SCALEWITHMAXSIZE:
+			var f = 1.0 / float(level.scale)
+			viewport_size = level_extent.size * f
+		if level.image_size_option == LevelshotLevelData.ImageSizeOptions.MAXSIZE or (level.image_size_option == LevelshotLevelData.ImageSizeOptions.SCALEWITHMAXSIZE and _is_size_greater(viewport_size, level.size)):
+			var v = level.size / level_extent.size
+			var f = min(v.x, v.y)
+			viewport_size = level_extent.size * f
+			_vp.size = viewport_size
+		if viewport_size == Vector2.ZERO:
+			printerr("LevelshotCapture: invalid image size option value for level %s: option value is %s" % [level.level_scene_path, level.image_size_option])
+			return
+		
+		if viewport_size.x > Image.MAX_WIDTH or viewport_size.y > Image.MAX_HEIGHT:
+			viewport_size = Vector2(Image.MAX_WIDTH, Image.MAX_HEIGHT)
+			push_warning("LevelshotCapture: resulting image size is > max.  Limiting image size to %s." % viewport_size)
+		
 		_vp_container.rect_size = viewport_size
+		_vp.size = viewport_size
 		
 		# center camera in level
 		camera.global_position = level_extent.position + level_extent.size / 2.0
