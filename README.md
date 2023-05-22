@@ -69,7 +69,7 @@ Levelshot currently supports the following settings.
 
 The image size is derived from the level boundary.  This can be calculated with one of the following options:
 
-* Scale - The image size is a scaled version of the level boundary.  This is done by multiplying a Vector2 of the level boundary with the scale fraction.  (level_boundary * 1.0 / scale)
+* Scale - The image size is a scaled version of the level boundary.  This is done by multiplying a Vector2 of the level boundary with the scale fraction.  (level_boundary / scale)
 * Max Image Size - The image size is scaled so that it fits within the given max image size while keeping the level boundary aspect ratio.
 * Scale by limit to Max Size - As the name implies, first the Scale option is calculated.  If that's bigger than Max Image Size, then the Max Image Size calculation is done.
 
@@ -77,7 +77,7 @@ The image size is derived from the level boundary.  This can be calculated with 
 
 These options determine how the level boundary is calculated.
 
-* Calculated - The level boundary is calculated by taking all of the rectangles of all visible nodes.
+* Calculated - The level boundary is calculated by taking all of the rectangles of all visible nodes and merging them together.
 * Use LevelshotReferenceRect - The level boundary is set by placing a LevelshotReferenceRect inside the game level.  You can have multiple LevelshotReferenceRect nodes, which will result in multiple levelshot images.
 
 ##### Other Settings
@@ -89,19 +89,19 @@ These options determine how the level boundary is calculated.
 
 ## How Does It Work (Detail)
 
-It's been asked quite a few times on the internet how to make a screenshot of an entire 2D level in Godot.  For those of you that want/need to roll your own, here's one answer.  Hopefully it works for you.
+It's been asked quite a few times on the internet how to make a screenshot of an entire 2D level in Godot.  For those of you that want/need to roll your own, here's **one** answer.  Hopefully it works for you.
 
 All that is really needed is to position a 2D camera in the middle of the level, modify the viewport size to reflect the level boundary's aspect ratio and size it to the desired final image size.  Then zoom the camera so that everything is in view and get the texture from the viewport.
 
 ### Determining the Level Boundary
 
-The easiest way to determine the level boundary is to set it.  Godot has this handy node called ReferenceRect.  Placing it into the level and sizing it around the visible parts is easy and calculating the level boundary is simple too.  We just need a Rect2 (rectangle) with position and size.  Since the ReferenceRect node is a Control node, it has a global_position and rect_size property.  So we can create a Rect2 with
+The easiest way to determine the level boundary is to set it.  Godot has a handy node called ReferenceRect.  Placing it into the level and sizing it around the visible parts is easy and calculating the level boundary is simple too.  We just need a Rect2 (rectangle) with position and size.  Since the ReferenceRect node is a Control node, it has a global_position and rect_size property.  So we can create a Rect2 with
 
     var level_boundary = Rect2(ref_rect.global_position, ref_rect.rect_size)
 
 Note that the Levelshot plugin uses a special ReferenceRect, called LevelshotReferenceRect, only because it's easy to identify with it's class name.  Otherwise it's just a ReferenceRect.
 
-But this sucks a little in that you'll have to move the reference rect when you make changes.  So, we can calculate the level boundary by traversing the level node tree, create a rectangle object for each, and merge them all to come up with a final rectangle that encompasses them all.
+But this sucks a little in that you'll have to move the reference rect when you make changes.  So, we can calculate the level boundary by traversing the level node tree, create a rectangle object for each, and merge them all to come up with a final rectangle that encompasses everything.
 
 The process is pretty simple and not too interesting, so that's all I'll describe on that for now.  See the level_extent_calculator.gd script for the code.
 
@@ -111,14 +111,14 @@ Some nodes interfere with the capture process.  The biggest offender is other Ca
 
 CanvasLayer nodes are hidden by default.  (You can turn this off.)  I personally use CanvasLayer's for HUDs and other overlays, so it seemed best to hide them so you don't see UI in the middle of your glorious levelshot image.
 
-Any node with a node group that's in the Excluded Node Groups list are set to invisible.
+Any node with a node group that's in the Excluded Node Groups list is set to invisible.
 
 Last but not least, all nodes have their pause mode set to PAUSE_MODE_STOP.  This way nodes that you set up to run even when the game is paused are paused during the capture process.
 
 
 ### Calculating Image/Viewport Size
 
-The size of a viewport determines the size of the image you get from it.  Go figure.  So, with a level boundary size determined, we can now do that.
+The size of a viewport determines the size of the image you get from it.  Go figure.  So, with a level boundary size determined, we can now set that.
 
 It seems simple scaling the image is the best option.  If you have multiple levels, then you'd want the image size to float along with the relative size of the level.  This is easy to do.  We just set a scale value and do some multiplication on the level boundary Vector2.
 
@@ -126,7 +126,7 @@ It seems simple scaling the image is the best option.  If you have multiple leve
 
 But what's a good scale factor?  1:10?  That would be 10% the level size, which can result in very small images.  You could just do 1:1 but that might produce huge images.  To get the best scale factor for your game, you would need to experiment.
 
-So, there's the option of just setting an max image size.  It's easier to understand what you'll get.
+So, there's the option of just setting a max image size.  It's easier to understand what you'll get.
 
 To get the image size based on a max image size we perform the following calculations:
 
@@ -136,7 +136,7 @@ To get the image size based on a max image size we perform the following calcula
 
 ### Camera Position and Zoom
 
-It's easy to position the camera in the middle of level.  It's just
+It's easy to position the camera in the middle of a level.  It's just
 
     camera2d.global_position = level_boundary.position + level_boundary.size / 2.0
 
