@@ -9,6 +9,10 @@ var _main_scene: Control
 
 
 func _enter_tree() -> void:
+	# force addition of settings
+	var _discard = LevelshotSettings.get_data_folder()
+	_discard = LevelshotSettings.get_data_file_name_pattern()
+	
 	_main_scene = MAIN_SCENE.instance()
 	var editor_interface := get_editor_interface()
 	_main_scene.editor_interface = editor_interface
